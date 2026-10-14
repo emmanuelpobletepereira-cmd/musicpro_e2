@@ -1,0 +1,60 @@
+{
+  "fecha_local": "2026-10-13T16:16:03-03:00",
+  "python": "3.12.14",
+  "django": "6.1.1",
+  "dependencias": {
+    "Django": "6.1.1",
+    "Faker": "40.40.0",
+    "asgiref": "3.12.1",
+    "sqlparse": "0.6.0",
+    "tzdata": "2026.5"
+  },
+  "motor": "SQLite",
+  "base": "temporal independiente; eliminada al finalizar",
+  "modalidad": "Cargas aditivas en la misma base temporal, sin movimientos",
+  "cargas": [
+    {
+      "productos_solicitados": 100,
+      "antes": 0,
+      "despues": 100,
+      "diferencia": 100,
+      "segundos": 1.38,
+      "lote": 1000,
+      "verificado": true
+    },
+    {
+      "productos_solicitados": 1000,
+      "antes": 100,
+      "despues": 1100,
+      "diferencia": 1000,
+      "segundos": 0.08,
+      "lote": 1000,
+      "verificado": true
+    },
+    {
+      "productos_solicitados": 100000,
+      "antes": 1100,
+      "despues": 101100,
+      "diferencia": 100000,
+      "segundos": 9.5,
+      "lote": 1000,
+      "verificado": true
+    },
+    {
+      "productos_solicitados": 1000000,
+      "antes": 101100,
+      "despues": 1101100,
+      "diferencia": 1000000,
+      "segundos": 73.92,
+      "lote": 1000,
+      "verificado": true
+    }
+  ],
+  "prueba_relaciones": {
+    "productos_adicionales": 12,
+    "ingresos": 12,
+    "lote": 5,
+    "verificado": true
+  },
+  "violaciones_fk": []
+}
