@@ -1,7 +1,0 @@
-<nav class="paginacion" aria-label="Páginas del listado">
-    <span>{{ pagina.paginator.count }} registro{{ pagina.paginator.count|pluralize }} · Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
-    <div>
-        {% if pagina.has_previous %}<a class="boton secundario" href="{% querystring page=pagina.previous_page_number %}" rel="prev">Anterior</a>{% endif %}
-        {% if pagina.has_next %}<a class="boton secundario" href="{% querystring page=pagina.next_page_number %}" rel="next">Siguiente</a>{% endif %}
-    </div>
-</nav>

@@ -7,7 +7,7 @@ Music Pro aplica la gestión de base de datos y Django Admin al inventario de un
 La pauta **E2 Evaluacion_inv_Caso_Semestral_Music_pro_U2 Backend.pdf**, p.8, distingue las etapas:
 
 - **E2:** conexión a la base de datos y administración mediante Django Admin. Las pp.9-11 detallan modelos, diagrama, migraciones, datos con Faker, consultas y CRUD en Admin.
-- **E3:** funciones CRUD propias de la aplicación y mecanismos de seguridad. El CRUD web de este proyecto es material complementario que permite practicar lo observado en el proyecto de referencia.
+- **E3:** funciones CRUD propias de la aplicación y mecanismos de seguridad. Esta implementación se limita a la E2 y utiliza exclusivamente Django Admin.
 - **Etapa de API:** Django REST Framework, JSON y JWT aparecen en los objetivos semestrales, pp.2-4, y en la evaluación del 14 de diciembre de 2026, p.5.
 
 La presentación **Music pro  - Presentacion.pdf**, pp.15-16, describe la bodega principal: ingreso, almacenamiento, salida y trazabilidad de productos. Esa área fundamenta los modelos de este proyecto. Las áreas de tienda, courier y pagos de las pp.17-22 pertenecen al contexto general del caso.

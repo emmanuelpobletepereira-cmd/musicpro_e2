@@ -1,8 +1,8 @@
 # Music Pro: inventario, base de datos y Django Admin
 
-Proyecto de bodega para Music Pro con **diez tablas propias del negocio**: categorías, marcas, proveedores, clientes, productos, compras, detalles de compras, ventas, detalles de ventas y movimientos. Permite consultar existencias y seguir el origen de ingresos y salidas por venta. El desarrollo toma los elementos de aprendizaje de `django-examples-main` y los aplica al caso propio: configuración, modelos relacionados, migraciones, Admin, formularios, plantillas y datos ficticios. Las decisiones y equivalencias están en [correspondencia con el proyecto de apoyo](docs/correspondencia_referencia.md).
+Proyecto de bodega para Music Pro con **diez tablas propias del negocio**: categorías, marcas, proveedores, clientes, productos, compras, detalles de compras, ventas, detalles de ventas y movimientos. Permite consultar existencias y seguir el origen de ingresos y salidas por venta desde Django Admin. El desarrollo toma los elementos de aprendizaje de `django-examples-main` y los aplica al caso propio: configuración, modelos relacionados, migraciones, Admin y datos ficticios. Las decisiones y equivalencias están en [correspondencia con el proyecto de apoyo](docs/correspondencia_referencia.md).
 
-La base utilizada es **SQLite**. Django trabaja con el archivo `db.sqlite3`, ubicado junto a `manage.py`, salvo que se configure otra ruta para un ensayo. La evaluación 2 se centra en la base de datos y el CRUD de **Django Admin**; el CRUD HTML de productos complementa la práctica de formularios. La pauta separa esa evaluación del CRUD web de E3 y de la etapa posterior con API REST/JWT.
+La base utilizada es **SQLite**. Django trabaja con el archivo `db.sqlite3`, ubicado junto a `manage.py`, salvo que se configure otra ruta para un ensayo. La evaluación 2 se centra en la base de datos y el CRUD de **Django Admin**. La aplicación utiliza únicamente las pantallas incorporadas del administrador. La pauta separa esa evaluación del CRUD web de E3 y de la etapa posterior con API REST/JWT.
 
 Esta guía está organizada en las seis partes de la evaluación. Los comandos se ejecutan en **PowerShell**, dentro de la carpeta del proyecto que contiene `manage.py`. Cada bloque explica para qué sirve.
 
@@ -14,7 +14,7 @@ Si ya instalaste el entorno y las dependencias, haz doble clic en [servidor.bat]
 .\servidor.bat
 ```
 
-El archivo se ubica automáticamente en la carpeta del proyecto y utiliza Python de `.venv`, sin activar el entorno manualmente. Mantén abierta la ventana y entra a <http://127.0.0.1:8000/> o a <http://127.0.0.1:8000/admin/> para ver las diez tablas. Detén el servidor con **Ctrl+C**.
+El archivo se ubica automáticamente en la carpeta del proyecto y utiliza Python de `.venv`, sin activar el entorno manualmente. Mantén abierta la ventana y entra a <http://127.0.0.1:8000/admin/> para ver las diez tablas. Detén el servidor con **Ctrl+C**.
 
 Si el puerto 8000 está ocupado, puedes elegir otro:
 
@@ -22,7 +22,7 @@ Si el puerto 8000 está ocupado, puedes elegir otro:
 .\servidor.bat 8001
 ```
 
-En ese caso, abre <http://127.0.0.1:8001/>. El lanzador usa el entorno `.venv`; si configuraste otro nombre, ajusta la ruta de Python dentro del archivo.
+En ese caso, abre <http://127.0.0.1:8001/admin/>. El lanzador usa el entorno `.venv`; si configuraste otro nombre, ajusta la ruta de Python dentro del archivo.
 
 ## Material para estudiar y presentar
 
@@ -132,17 +132,12 @@ musicpro_e2/
     apps.py                       Módulo Core; etiqueta de aplicación bodega
     models.py                     Entidades, campos y relaciones
     admin.py                      CRUD, columnas, filtros y búsquedas
-    views.py                      Consultas y CRUD HTML de productos
-    forms.py                      ModelForm de productos
-    urls.py                       Rutas de consultas y formularios
     tests.py                      Pruebas del CRUD y las consultas
     test_database.py              Pruebas de integridad y carga de datos
     migrations/                   Historial de cambios de estructura
     management/commands/
       cargar_datos.py              Generación de datos ficticios
       verificar_bd.py              Diagnóstico de conexión, tablas y conteos
-  templates/                      Consultas, formulario y confirmación de borrado
-  Core/static/                    Estilos propios servidos por Django
   docs/
     diagrama_bd.md                Diagrama y diccionario de datos
     diagrama_bd.svg               Diagrama que abre cualquier navegador
@@ -316,7 +311,6 @@ python manage.py runserver
 - `createsuperuser` solicita usuario, correo y contraseña para acceder a la administración. La contraseña no se muestra mientras la escribes.
 - `runserver` inicia el servidor local. Entra en [Django Admin](http://127.0.0.1:8000/admin/) con la cuenta creada. Detén el servidor con `Ctrl+C`.
 
-También puedes abrir [el inventario](http://127.0.0.1:8000/) y [los movimientos](http://127.0.0.1:8000/movimientos/), que consultan la misma base y muestran 50 filas por página. El inventario permite buscar por texto, categoría y estado de stock.
 
 | Modelo | Columnas y consultas | Filtros |
 | --- | --- | --- |
@@ -328,23 +322,11 @@ También puedes abrir [el inventario](http://127.0.0.1:8000/) y [los movimientos
 | Detalles de compras y ventas | Documento, producto, cantidad, valor unitario y subtotal calculado | Fecha del documento |
 | Movimientos | Producto, tipo, cantidad, fecha y motivo; referencias de origen dentro del formulario; búsqueda por producto, motivo y documento | Tipo, fecha y navegación por fecha |
 
-La página de movimientos permite filtrar **Ingresos** y **Salidas**. Los ingresos de muestra muestran «Recepción de mercadería»; las salidas por venta muestran «Por venta». El botón **Registrar salida por venta**, disponible con permiso de creación de movimientos, abre el Admin con ese tipo y motivo preparados; debes seleccionar el producto, indicar la cantidad y guardar.
+En Django Admin, abre Movimientos y utiliza el filtro **Tipo** para consultar ingresos o salidas. Los ingresos de muestra muestran «Recepción de mercadería»; las salidas por venta muestran «Por venta». Para registrar una salida, pulsa Añadir movimiento, selecciona SALIDA e indica «Por venta» como motivo.
 
 El estado de **stock crítico** corresponde a `cantidad <= stock_minimo`. Los formularios tienen autocompletado para seleccionar productos y relaciones; así no cargan un selector con todos los productos cuando hay un millón de registros. Los listados usan paginación, consultas de relaciones mediante `select_related` y evitan un conteo adicional del conjunto completo al filtrar. Las búsquedas de texto y los conteos de conjuntos grandes aún pueden tardar, especialmente en SQLite.
 
 La personalización incluye el encabezado **Music Pro - Bodega**, el título del sitio, nombres legibles de los modelos, las columnas de cada listado, campos organizados por secciones e identificadores de solo lectura. [La guía del Admin](README_ADMIN.md) explica qué propiedad configura cada comportamiento y cómo asignar permisos.
-
-### Formularios HTML de productos
-
-El proyecto también incorpora un `ModelForm` con páginas de creación, edición y confirmación de eliminación. Reutiliza los campos y reglas del modelo, utiliza la sesión de Django y protege los envíos con CSRF.
-
-| Ruta | Acción | Permiso requerido |
-| --- | --- | --- |
-| `/productos/nuevo/` | Crear un producto | `bodega.add_producto` |
-| `/productos/<id>/editar/` | Modificar un producto existente | `bodega.change_producto` |
-| `/productos/<id>/eliminar/` | Mostrar la confirmación y eliminar mediante POST | `bodega.delete_producto` |
-
-El visitante sin sesión es dirigido al inicio de sesión del Admin. Un usuario autenticado sin el permiso de la acción recibe un acceso denegado. Los productos con movimientos o detalles de compra/venta están protegidos también en estos formularios; eliminar requiere confirmación y un envío POST. Los demás modelos del negocio se administran en Django Admin. Para esta E2, realiza la demostración evaluada en Admin.
 
 ### Demostración del CRUD con el docente
 

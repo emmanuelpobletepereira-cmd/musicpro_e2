@@ -55,9 +55,11 @@ La nueva muestra completa mantiene esos motivos: hay 120 ingresos con motivo **R
 python manage.py test Core --noinput --verbosity 1
 ```
 
-**51 pruebas aprobadas** en 30,230 segundos con Django 6.1.1, sin errores del comprobador de Django. Cubren CRUD web y Admin, permisos y CSRF, filtros y paginación, registro y renderizado de los diez modelos en Admin, totales decimales, restricciones y relaciones protegidas, coherencia del origen de movimientos, edición de detalles vinculados, cargas completas por lotes, conservación de datos y rollback del lote fallido.
+**40 pruebas aprobadas** en 25,093 segundos con Django 6.1.1, después de retirar la interfaz web propia, sin errores del comprobador de Django. Cubren CRUD, filtros y paginación en Admin, registro y renderizado de los diez modelos, totales decimales, restricciones y relaciones protegidas, coherencia del origen de movimientos, edición de detalles vinculados, cargas completas por lotes, conservación de datos y rollback del lote fallido. También comprueban que solo se publica `/admin/` y que las antiguas rutas propias devuelven 404.
 
-Se revisaron en el navegador el inventario y el historial. El inventario muestra la marca y el stock de los nuevos productos. Se renderizaron y revisaron el diagrama de base de datos y los dos esquemas de apoyo. El diagrama principal corresponde a los diez modelos: 53 campos y 11 relaciones de clave foránea.
+La aplicación utiliza exclusivamente Django Admin. Se retiraron `Core/views.py`, `Core/forms.py`, `Core/urls.py`, las plantillas propias, el CSS del inventario y las pruebas exclusivas del CRUD web. La configuración carga las plantillas incorporadas de Django. La arquitectura se actualizó, renderizó y revisó visualmente; el diagrama de base de datos conserva los diez modelos, 53 campos y 11 relaciones de clave foránea.
+
+Tras retirar las vistas, `verificar_bd` confirmó los mismos conteos de las diez tablas y cero migraciones pendientes. No fue necesario cambiar modelos, generar migraciones ni modificar datos. La verificación `makemigrations --check --dry-run` informó que no hay cambios de estructura.
 
 La imagen que se entrega es [diagrama_bd.png](docs/diagrama_bd.png). La [matriz de la rúbrica](docs/rubrica_e2.md) y la [correspondencia con la referencia](docs/correspondencia_referencia.md) explican la evidencia. GitHub público, subida a la plataforma y defensa individual siguen pendientes; estas verificaciones no constituyen una calificación docente.
 

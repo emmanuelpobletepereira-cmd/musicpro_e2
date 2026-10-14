@@ -23,17 +23,18 @@ class EvaluacionDosTests(TestCase):
         producto.refresh_from_db()
         self.assertEqual(producto.cantidad, 20)
         self.assertContains(self.client.get(reverse('admin:bodega_producto_changelist'), {'q': 'DEF-01'}), 'Amplificador')
-        self.assertContains(self.client.get('/'), 'DEF-01')
         respuesta = self.client.post(reverse('admin:bodega_producto_delete', args=[producto.pk]), {'post': 'yes'})
         self.assertEqual(respuesta.status_code, 302)
         self.assertFalse(Producto.objects.filter(pk=producto.pk).exists())
 
-    def test_faker_y_paginas(self):
+    def test_faker_y_paginacion_en_admin(self):
         call_command('cargar_datos', cantidad=100)
         self.assertEqual(Producto.objects.count(), 100)
         self.assertEqual(Producto.objects.values('codigo').distinct().count(), 100)
-        self.assertEqual(len(self.client.get('/').context['productos']), 50)
-        self.assertEqual(self.client.get('/movimientos/').status_code, 200)
+        respuesta = self.client.get(reverse('admin:bodega_producto_changelist'))
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(len(respuesta.context['cl'].result_list), 50)
+        self.assertEqual(self.client.get(reverse('admin:bodega_movimiento_changelist')).status_code, 200)
 
     def test_movimiento_rechaza_cero_en_admin(self):
         producto = Producto.objects.create(codigo='P1', nombre='Cable', categoria=self.categoria, ubicacion='A')
@@ -45,7 +46,7 @@ class EvaluacionDosTests(TestCase):
         self.assertIn('cantidad', respuesta.context['adminform'].form.errors)
         self.assertEqual(Movimiento.objects.count(), 0)
 
-    def test_historial_filtra_salidas_y_ofrece_registro_por_venta(self):
+    def test_admin_filtra_movimientos_por_tipo(self):
         producto = Producto.objects.create(
             codigo='VENTA-01', nombre='Guitarra', categoria=self.categoria, ubicacion='A1',
         )
@@ -55,12 +56,21 @@ class EvaluacionDosTests(TestCase):
         salida = Movimiento.objects.create(
             producto=producto, tipo='SALIDA', cantidad=2, motivo='Por venta',
         )
-        respuesta = self.client.get(reverse('movimientos'), {'tipo': 'SALIDA'})
-        self.assertEqual([m.pk for m in respuesta.context['movimientos']], [salida.pk])
+        url = reverse('admin:bodega_movimiento_changelist')
+        respuesta = self.client.get(url, {'tipo__exact': 'SALIDA'})
+        self.assertEqual([m.pk for m in respuesta.context['cl'].result_list], [salida.pk])
         self.assertContains(respuesta, 'Por venta')
         self.assertNotContains(respuesta, 'Recepción de mercadería')
-        self.assertContains(respuesta, 'tipo=SALIDA&amp;motivo=Por%20venta')
-        respuesta = self.client.get(reverse('movimientos'), {'tipo': 'INGRESO'})
-        self.assertEqual([m.pk for m in respuesta.context['movimientos']], [ingreso.pk])
-        respuesta = self.client.get(reverse('movimientos'), {'tipo': 'INVALIDO'})
-        self.assertEqual(len(respuesta.context['movimientos']), 2)
+        respuesta = self.client.get(url, {'tipo__exact': 'INGRESO'})
+        self.assertEqual([m.pk for m in respuesta.context['cl'].result_list], [ingreso.pk])
+
+    def test_solo_se_publican_las_rutas_del_admin(self):
+        from pathlib import Path
+        from django.conf import settings
+        from django.urls import get_resolver
+
+        rutas = get_resolver().url_patterns
+        self.assertEqual([str(ruta.pattern) for ruta in rutas], ['admin/'])
+        self.assertFalse((Path(settings.BASE_DIR) / 'Core' / 'views.py').exists())
+        for ruta in ('/', '/movimientos/', '/productos/nuevo/'):
+            self.assertEqual(self.client.get(ruta).status_code, 404)

@@ -12,9 +12,6 @@ Los nombres de archivo de la primera columna son rutas relativas a la carpeta en
 | Modelos relacionados en `rrhh/models.py` y `automotora_basica/models.py` | [Core/models.py](../Core/models.py) | Diez entidades de bodega relacionadas mediante claves propias, detalles de documentos, reglas de cantidad/precio y relaciones protegidas |
 | Historial en `rrhh/migrations/` y `automotora_basica/migrations/` | [Core/migrations/](../Core/migrations/) | Conservar la creación inicial y los cambios posteriores; no sustituir el historial por una base precargada |
 | Personalización en `rrhh/admin.py`, `automotora_basica/admin.py` y `README_ADMIN.md` | [Core/admin.py](../Core/admin.py), [README_ADMIN.md](../README_ADMIN.md) | Listados, filtros, búsquedas, secciones de formulario, identificadores de solo lectura y nombres propios de bodega |
-| Formularios en `automotora_basica/forms.py` | [Core/forms.py](../Core/forms.py) | ModelForm para los campos de Producto, con validación del modelo |
-| Rutas, vistas y plantillas de `automotora_basica` | [Core/urls.py](../Core/urls.py), [Core/views.py](../Core/views.py), [templates/](../templates/) | CRUD HTML de productos con permisos, CSRF y confirmación de eliminación; conservar las consultas del inventario y movimientos |
-| CSS local de `automotora_basica/static/automotora_basica/` | [Core/static/](../Core/static/) | Estilos de Music Pro servidos localmente por Django |
 | Comandos `rrhh/management/commands/seed_empleado.py` y `automotora_basica/management/commands/seed_vehiculos.py` | [cargar_datos.py](../Core/management/commands/cargar_datos.py) | Generación musical con Faker, cantidad configurable, lotes, semilla y modalidad completa de compras/ventas con sus movimientos |
 | Explicación de consultas ORM y datos en `README_SEEDER.md` | [verificar_bd.py](../Core/management/commands/verificar_bd.py), [README_SEEDER.md](../README_SEEDER.md) | Verificar conexión real, tablas y conteos; comprobar cada carga por sus códigos únicos |
 | Ruta de aprendizaje de `readme.md`, `README_ADMIN.md`, `README_MIGRACIONES.md`, `README_SEEDER.md` | [README.md](../README.md) y las tres guías temáticas | Mantener material para ejecutar y explicar el proyecto, redactado para el caso de la evaluación |
@@ -33,7 +30,7 @@ La instalación se realiza con `python -m pip install -r requirements.txt` y se 
 
 ## Relación con la evaluación
 
-La pauta E2, páginas 8–11, concentra la demostración en conexión, modelos, diagrama, migraciones, Admin y datos ficticios. El CRUD HTML se mantiene como práctica complementaria por correspondencia con los formularios del material de apoyo; la pauta distingue esta etapa del CRUD web evaluado posteriormente. No se incorpora Django REST Framework ni JWT, que pertenecen a una etapa posterior y tampoco están en las cinco dependencias indicadas.
+La pauta E2, páginas 8–11, concentra la demostración en conexión, modelos, diagrama, migraciones, Admin y datos ficticios. La interfaz utiliza exclusivamente Django Admin: los formularios, listados y operaciones CRUD los proporciona el administrador de Django. No se implementan vistas, formularios ni plantillas propias. No se incorpora Django REST Framework ni JWT, que pertenecen a una etapa posterior y tampoco están en las cinco dependencias indicadas.
 
 El [diagrama de entidades y relaciones](diagrama_bd.png) representa las diez tablas de negocio solicitadas adicionalmente por el profesor y es la imagen requerida para la entrega. [La arquitectura](diagrama_arquitectura.png) y [el flujo Faker](flujo_carga.png) apoyan la explicación. La [matriz de evidencias](rubrica_e2.md) relaciona el código con los diez indicadores de la escala, sin convertir las marcas precargadas del archivo de rúbrica en una calificación obtenida.
 

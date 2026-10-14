@@ -31,21 +31,21 @@ El programa ejecuta `git init -b main`, prepara los archivos de cada grupo con `
 
 | Commit | Contenido |
 | ---: | --- |
-| 1 | Dependencias, exclusiones y lanzador del servidor |
-| 2 | Configuración Django y conexión SQLite |
-| 3 | Aplicación de bodega y rutas |
-| 4 | Diez modelos del negocio |
-| 5 | Historial de migraciones |
-| 6 | Django Admin, filtros y búsquedas |
-| 7 | Formularios y vistas del inventario |
-| 8 | Plantilla base, paginación y estilos |
-| 9 | Pantallas del CRUD de productos |
-| 10 | Historial de movimientos y documentos |
-| 11 | Generación de datos con Faker |
-| 12 | Diagnóstico de la base de datos |
-| 13 | Pruebas automáticas |
-| 14 | Diagrama de base de datos y esquemas de apoyo |
-| 15 | Guías, evidencias y preparación de GitHub |
+| 1 | Configurar dependencias y archivos excluidos |
+| 2 | Configurar el proyecto Django y la conexion SQLite |
+| 3 | Registrar la aplicacion de bodega |
+| 4 | Definir los diez modelos del negocio y sus relaciones |
+| 5 | Incorporar el historial de migraciones de la bodega |
+| 6 | Configurar el CRUD, filtros y busquedas de Django Admin |
+| 7 | Generar datos relacionados con Faker y cargas por lotes |
+| 8 | Diagnosticar la conexion, tablas y migraciones |
+| 9 | Verificar CRUD, filtros y rutas de Django Admin |
+| 10 | Probar integridad de la base y cargas por lotes |
+| 11 | Probar los diez modelos y su administracion |
+| 12 | Proteger la edicion de documentos vinculados |
+| 13 | Verificar la generacion completa de datos relacionados |
+| 14 | Documentar el esquema y los diagramas de Music Pro |
+| 15 | Documentar instalacion, evaluacion y publicacion en GitHub |
 
 Comprueba el resultado:
 
@@ -102,3 +102,16 @@ py -m venv .venv
 La configuración usa una clave pública explícita para desarrollo local. Para otros entornos, define una clave privada mediante la variable `DJANGO_SECRET_KEY`; los archivos `.env` no se cargan automáticamente. Consulta [README.md](README.md) para la instalación completa.
 
 Para cambios futuros, selecciona los archivos modificados con `git add`, crea un nuevo commit y ejecuta `git push`. Cada cambio posterior aumenta el contador; no es necesario conservarlo en 15 después de la entrega.
+
+## Actualizar el repositorio ya publicado: solo Django Admin
+
+Si ya publicaste la primera versión, conserva los commits existentes. La corrección retira las vistas, formularios y plantillas propias, y deja únicamente la ruta `/admin/`. Actualiza GitHub desde la carpeta del proyecto:
+
+```powershell
+git diff --stat
+git add -u
+git commit -m "Usar exclusivamente Django Admin y retirar las vistas propias"
+git push
+```
+
+`diff --stat` resume los cambios; `add -u` prepara modificaciones y eliminaciones de archivos ya registrados, sin incluir archivos nuevos ajenos a esta corrección. El nuevo commit se añade al historial: si tenías 15, tendrás 16. No vuelvas a ejecutar `preparar_git.py` ni reinicialices el repositorio existente.

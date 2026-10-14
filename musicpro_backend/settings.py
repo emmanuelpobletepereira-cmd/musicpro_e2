@@ -45,7 +45,7 @@ ROOT_URLCONF = 'musicpro_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -61,7 +61,7 @@ WSGI_APPLICATION = 'musicpro_backend.wsgi.application'
 
 
 # Database
-# SQLite: base local utilizada por los modelos, las vistas y Django Admin
+# SQLite: base local utilizada por los modelos y Django Admin
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

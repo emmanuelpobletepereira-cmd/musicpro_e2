@@ -5,7 +5,7 @@
 | Diagrama | Uso | Archivos |
 | --- | --- | --- |
 | Base de datos | Imagen para la entrega: diez entidades, todos los campos, PK, FK, UK y cardinalidades | [PNG](diagrama_bd.png), [SVG](diagrama_bd.svg), [diccionario y Mermaid](diagrama_bd.md) |
-| Arquitectura | Apoyo para explicar configuración, Admin, vistas, formularios, ORM y SQLite | [PNG](diagrama_arquitectura.png), [SVG](diagrama_arquitectura.svg) |
+| Arquitectura | Apoyo para explicar configuración, Admin, comandos, ORM y SQLite | [PNG](diagrama_arquitectura.png), [SVG](diagrama_arquitectura.svg) |
 | Carga con Faker | Apoyo para explicar modalidades, lotes, transacciones y verificación | [PNG](flujo_carga.png), [SVG](flujo_carga.svg) |
 
 La pauta solicita el diagrama de base de datos; los dos esquemas de apoyo son complementarios para la defensa. Los diagramas describen esta implementación propia de Music Pro.
@@ -17,13 +17,11 @@ La pauta solicita el diagrama de base de datos; los dos esquemas de apoyo son co
 ```mermaid
 flowchart TD
     persona[Usuario y navegador] --> admin[Django Admin: acceso staff y permisos]
-    persona --> vistas[Vistas: consultas y CRUD de productos con permisos]
-    configuracion[Configuración y URLs] --> admin
-    configuracion --> vistas
-    plantillas[Plantillas y CSS local] --> vistas
+    configuracion[Configuración y URL /admin/] --> admin
     admin --> modelos[ORM: diez modelos de bodega]
-    vistas --> modelos
-    modelos --> sqlite[(SQLite: diez tablas de negocio + diez internas)]
+    comandos[Comandos: Faker y diagnóstico] --> modelos
+    migraciones[Migraciones Django] --> sqlite[(SQLite: diez tablas de negocio + diez internas)]
+    modelos --> sqlite
 ```
 
 ## Generación de datos
