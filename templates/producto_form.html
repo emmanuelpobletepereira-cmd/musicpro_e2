@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ titulo }} · Music Pro{% endblock %}
+{% block contenido %}
+<a class="volver" href="{% url 'home' %}">← Volver al inventario</a>
+<div class="titulo-pagina"><div><p class="sobre-titulo">Bodega / Productos</p><h1>{{ titulo }}</h1><p class="descripcion">{% if producto %}Actualiza la ficha #{{ producto.pk }} · {{ producto.codigo }}.{% else %}Completa la ficha para incorporar un producto a la bodega.{% endif %}</p></div></div>
+<form class="panel formulario" method="post">
+    {% csrf_token %}
+    {% if form.errors %}<div class="aviso error" role="alert">Revisa los campos indicados. El producto todavía no se ha guardado.{{ form.non_field_errors }}</div>{% endif %}
+    <div class="rejilla-formulario">
+        {% for field in form %}<div class="campo{% if field.errors %} campo-error{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<p class="ayuda"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text }}</p>{% endif %}{% if field.errors %}<div class="errores"{% if field.auto_id %} id="{{ field.auto_id }}_error"{% endif %}>{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+    </div>
+    <p class="nota">La marca es opcional. Las categorías y marcas se administran en Django Admin.</p>
+    {% if producto %}<p class="nota">Modificar la cantidad actual no genera un movimiento automáticamente.</p>{% endif %}
+    <div class="acciones-formulario"><button class="boton" type="submit">{{ accion }}</button><a class="boton secundario" href="{% url 'home' %}">Cancelar</a></div>
+</form>
+{% endblock %}
