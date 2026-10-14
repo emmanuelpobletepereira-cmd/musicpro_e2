@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block titulo %}Movimientos · Music Pro{% endblock %}
+{% block contenido %}
+<div class="titulo-pagina"><div><p class="sobre-titulo">Bodega / Historial</p><h1>Movimientos</h1><p class="descripcion">Consulta los ingresos y salidas registrados para cada producto.</p></div>{% if perms.bodega.add_movimiento %}<a class="boton" href="{% url 'admin:bodega_movimiento_add' %}?tipo=SALIDA&amp;motivo=Por%20venta">Registrar salida por venta</a>{% endif %}</div>
+<p class="nota">El registro de un movimiento no modifica automáticamente las existencias. Los cambios de cantidad se administran en el producto.</p>
+<form class="filtros filtros-movimientos panel" method="get" action="{% url 'movimientos' %}" aria-label="Filtrar movimientos">
+    <div class="campo"><label for="tipo-movimiento">Tipo de movimiento</label><select id="tipo-movimiento" name="tipo"><option value="">Todos los movimientos</option><option value="INGRESO"{% if tipo_seleccionado == 'INGRESO' %} selected{% endif %}>Ingresos</option><option value="SALIDA"{% if tipo_seleccionado == 'SALIDA' %} selected{% endif %}>Salidas</option></select></div>
+    <div class="acciones-filtro"><button class="boton" type="submit">Filtrar</button><a class="enlace" href="{% url 'movimientos' %}">Limpiar</a></div>
+</form>
+<section class="panel listado" aria-labelledby="titulo-listado">
+    <div class="encabezado-listado"><h2 id="titulo-listado">Historial de bodega</h2><span class="muted">Más recientes primero</span></div>
+    <div class="tabla-scroll"><table>
+        <caption class="solo-lectores">Movimientos registrados y producto relacionado</caption>
+        <thead><tr><th scope="col">ID</th><th scope="col">Producto</th><th scope="col">Tipo</th><th scope="col">Documento</th><th scope="col" class="numero">Cantidad</th><th scope="col">Fecha</th><th scope="col">Motivo</th></tr></thead>
+        <tbody>{% for mov in movimientos %}<tr><td>#{{ mov.pk }}</td><td>{{ mov.producto }}</td><td><span class="etiqueta {% if mov.tipo == 'INGRESO' %}normal{% else %}salida{% endif %}">{{ mov.get_tipo_display }}</span></td><td>{% if mov.detalle_compra_id %}Compra {{ mov.detalle_compra.compra.numero }}{% elif mov.detalle_venta_id %}Venta {{ mov.detalle_venta.venta.numero }}{% else %}Sin documento vinculado{% endif %}</td><td class="numero">{{ mov.cantidad }}</td><td>{{ mov.fecha|date:'d/m/Y H:i' }}</td><td>{{ mov.motivo }}</td></tr>{% empty %}<tr><td class="vacio" colspan="7">No hay movimientos registrados.</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% include 'paginacion.html' %}
+</section>
+{% endblock %}
